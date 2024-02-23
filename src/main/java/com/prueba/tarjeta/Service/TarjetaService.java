@@ -78,8 +78,24 @@ public class TarjetaService {
     }
   }
 
+  // Obtener información de la tarjeta por cardId
   public TarjetaEntity getTarjeta(String cardId) {
     return tarjetaRepository.findByCardId(cardId).orElse(null);
   }
 
+  // Método para recargar saldo
+  public boolean recargarSaldo(String cardId, BigDecimal balance) {
+    Optional<TarjetaEntity> tarjetaOptional = tarjetaRepository.findByCardId(cardId);
+
+    if (tarjetaOptional.isPresent()) {
+      TarjetaEntity tarjeta = tarjetaOptional.get();
+      BigDecimal saldoActual = tarjeta.getSaldoDisponible();
+      BigDecimal nuevoSaldo = saldoActual.add(balance);
+      tarjeta.setSaldoDisponible(nuevoSaldo);
+      tarjetaRepository.save(tarjeta);
+      return true;
+    } else {
+      return false; // La tarjeta no existe
+    }
+  }
 }

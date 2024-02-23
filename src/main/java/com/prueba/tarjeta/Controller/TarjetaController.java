@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Random;
 
@@ -49,14 +50,23 @@ public class TarjetaController {
     boolean eliminada = tarjetaService.eliminarTarjeta(cardId);
     return (eliminada) ? ResponseEntity.ok().body("Tarjeta bloqueada correctamente") : ResponseEntity.ok().body("Tarjeta no encontrada");
   }
-  /*
-  public boolean bloquearTarjeta(@PathVariable String cardId) {
-    return tarjetaService.eliminarTarjeta(cardId);
-  }
-  */
   // Obtener tarjeta por cardId
   @GetMapping("/card/{cardId}")
   public TarjetaEntity getTarjeta(@PathVariable String cardId) {
     return tarjetaService.getTarjeta(cardId);
+  }
+  // Método para recargar saldo
+  @PostMapping("/card/balance")
+  public ResponseEntity<?> recargarSaldo(@RequestBody Map<String, Object> requestBody) {
+    String cardId = (String) requestBody.get("cardId");
+    BigDecimal balance = new BigDecimal((String) requestBody.get("balance"));
+
+    boolean recargaExitosa = tarjetaService.recargarSaldo(cardId, balance);
+
+    if (recargaExitosa) {
+      return ResponseEntity.ok().body("Recarga de saldo exitosa");
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarjeta no encontrada");
+    }
   }
 }
