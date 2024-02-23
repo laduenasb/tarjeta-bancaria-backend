@@ -69,4 +69,11 @@ public class TarjetaController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarjeta no encontrada");
     }
   }
+  // Consulta de saldo
+  // Tipo de método: GET
+  // Recurso: /card/balance/{cardId}
+  @GetMapping("/card/balance/{cardId}")
+  public BigDecimal consultarSaldo(@PathVariable String cardId) {
+    return tarjetaService.consultarSaldo(cardId);
+  }
 }

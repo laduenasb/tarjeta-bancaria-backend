@@ -98,4 +98,14 @@ public class TarjetaService {
       return false; // La tarjeta no existe
     }
   }
+  // Consulta de saldo de la tarjeta
+  public BigDecimal consultarSaldo(String cardId) {
+    Optional<TarjetaEntity> tarjetaOptional = tarjetaRepository.findByCardId(cardId);
+    if (tarjetaOptional.isPresent()) {
+      TarjetaEntity tarjeta = tarjetaOptional.get();
+      return tarjeta.getSaldoDisponible();
+    } else {
+      return BigDecimal.ZERO; // La tarjeta no existe o no esta activa
+    }
+  }
 }
