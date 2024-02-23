@@ -55,12 +55,17 @@ public class TarjetaService {
   }
   // Se crea la tarjeta y se activa la tarjeta
   public TarjetaEntity activarTarjeta(String cardId) {
-    TarjetaEntity nuevaTarjeta = new TarjetaEntity();
-    nuevaTarjeta.setCardId(cardId);
-    nuevaTarjeta.setActiva(true);
-    nuevaTarjeta.setSaldoDisponible(new BigDecimal(0));
-    nuevaTarjeta.setFechaVencimiento(LocalDate.now().plusYears(3));
-    return saveTarjeta(nuevaTarjeta);
+    // Verificar que la tarjeta no existe y se active
+    if (tarjetaRepository.findByCardId(cardId).isPresent()) {
+      return null;
+    } else {
+      TarjetaEntity nuevaTarjeta = new TarjetaEntity();
+      nuevaTarjeta.setCardId(cardId);
+      nuevaTarjeta.setActiva(true);
+      nuevaTarjeta.setSaldoDisponible(new BigDecimal(0));
+      nuevaTarjeta.setFechaVencimiento(LocalDate.now().plusYears(3));
+      return saveTarjeta(nuevaTarjeta);
+    }
   }
   // Bloquear tarjeta
   public boolean eliminarTarjeta(String cardId) {
